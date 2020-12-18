@@ -1,0 +1,8 @@
+﻿$primary-color: #00B0F0;
+$secondary-color: #EBC722;
+$tertiary-color: #EBC722;
+
+
+$primary-color-disabled: lighten($primary-color,20%);
+$secondary-color-disabled: lighten($secondary-color,20%);
+$tertiary-color-disabled: lighten($tertiary-color,20%);

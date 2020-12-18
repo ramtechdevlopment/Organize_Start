@@ -1,0 +1,44 @@
+﻿@page "/signin"
+@*if you need to use route with paramaters then you need to add @page "singin/{username} etc not effecient if you need to pass several values*@
+@inherits SignInBase
+
+<div class="sign-form">
+
+    <p class="Welcome-text"> Hello  @(string.IsNullOrEmpty(User.UserName) ? "User" : User.UserName) - Today is @Day! </p>
+
+    <EditForm EditContext="@EditContext" OnValidSubmit="OnSubmit">
+        <DataAnnotationsValidator />
+        @*<input type="text" class="sign-input form-control" placeholder="Username" value="@Username" @onchange="HandleUserNameChanged" />*@
+        @*when using validator we need to bing to the HTML VALUE*@
+        @*<InputText type="text" class="sign-input form-control" placeholder="Username" @bind-Value="@User.UserName" />
+            <ValidationMessage For="@(()=> User.UserName)"></ValidationMessage>*@
+        <div class="sign-validation">
+            <ValidationInput placeholder="Username"
+                             @bind-Value="@User.UserName" Error="@GetError(() => User.UserName)">
+
+            </ValidationInput>
+        </div>
+        <div class="sign-validation">
+            <ValidationInput type="password"
+                             placeholder="Password"
+                             @bind-Value="@User.Password"
+                             Error="@GetError(() => User.Password)">
+
+            </ValidationInput>
+        </div>
+
+
+        @*<InputText type="text" class="sign-input form-control" placeholder="Password" @bind-Value="@User.Password" />*@
+        @*<ValidationMessage For="@(()=> User.Password)"></ValidationMessage>*@
+        <button class="sign-button btn btn-primary" type="submit"> Sign in </button>
+    </EditForm>
+
+
+    <div class="signup">
+        <a href="@(User.UserName != null ? "/signup?username="+User.UserName: "/signin")">Sign Up</a>
+        @*<a href="@(User.UserName != null ? "/signup/"+ User.UserName : "/signin")">Sign Up</a>*@
+        @* above line if we were usign routing and parameters*@
+
+    </div>
+</div>
+

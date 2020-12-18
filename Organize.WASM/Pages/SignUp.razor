@@ -1,0 +1,69 @@
+﻿@page "/signup"
+@inherits SignUpBase
+
+<div class="sign-form">
+
+    <EditForm EditContext="@EditContext" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator />
+        @*<input type="text" class="sign-input form-control" placeholder="Username" value="@Username" @onchange="HandleUserNameChanged" />*@
+        @*when using validator we need to bing to the HTML VALUE*@
+        @*<InputText type="text" class="sign-input form-control" placeholder="Username" @bind-Value="@User.UserName" />
+            <ValidationMessage For="@(()=> User.UserName)"></ValidationMessage>*@
+        <div class="sign-validation">
+            <ValidationInput placeholder="Username"
+                             @bind-Value="@User.UserName" Error="@GetError(() => User.UserName)">
+
+            </ValidationInput>
+        </div>
+        <div class="sign-validation">
+            <ValidationInput type="password"
+                             placeholder="Password"
+                             @bind-Value="@User.Password"
+                             Error="@GetError(() => User.Password)">
+
+            </ValidationInput>
+        </div>
+
+        <div class="sign-validation">
+            <ValidationInput placeholder="First Name"
+                             @bind-Value="@User.FirstName"
+                             Error="@GetError(() => User.FirstName)">
+
+            </ValidationInput>
+        </div>
+
+        <div class="sign-validation">
+            <ValidationInput placeholder="Last Name"
+                             @bind-Value="@User.LastName"
+                             Error="@GetError(() => User.LastName)">
+
+            </ValidationInput>
+        </div>
+
+        <div class="sign-validation">
+            <ValidationInput placeholder="Phone"
+                             @bind-Value="@User.PhoneNumber"
+                             Error="@GetError(() => User.PhoneNumber)">
+
+            </ValidationInput>
+        </div>
+
+        <div class="sign-validation">
+            <Dropdown TValue="Organize.Shared.Enums.GenderTypeEnum"
+                      @bind-SelectedItem="@SelectedGenderTypeDropDownItem"
+                      SelectableItems="@GenderTypeDropDownItems">
+
+
+            </Dropdown>
+
+        </div>
+
+
+        @*<InputText type="text" class="sign-input form-control" placeholder="Password" @bind-Value="@User.Password" />*@
+        @*<ValidationMessage For="@(()=> User.Password)"></ValidationMessage>*@
+        <button class="sign-button btn btn-primary" type="submit"> Sign in </button>
+    </EditForm>
+
+
+
+</div>
