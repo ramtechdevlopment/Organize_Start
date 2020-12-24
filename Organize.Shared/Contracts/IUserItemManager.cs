@@ -10,7 +10,9 @@ namespace Organize.Shared.Contracts
 {
   public  interface IUserItemManager
   {
-      Task<ChildItem> CreateNewChildItemAndAddItToParentItemAsync(ParentItem parent);
+
+      Task RetrieveAllUserItemsOfUserAndSetToUserAsync(User user);
+        Task<ChildItem> CreateNewChildItemAndAddItToParentItemAsync(ParentItem parent);
 
       Task<BaseItem> CreateNewUserItemAndAddItToUserAsync(User user, ItemTypeEnum typeEnum);
     }

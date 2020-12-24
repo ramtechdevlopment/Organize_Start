@@ -7,6 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="bin\Debug\netstandard2.1\wwwroot\_framework\**" />
+    <Compile Remove="wwwroot\_framework\**" />
+    <Content Remove="bin\Debug\netstandard2.1\wwwroot\_framework\**" />
+    <Content Remove="wwwroot\_framework\**" />
+    <EmbeddedResource Remove="bin\Debug\netstandard2.1\wwwroot\_framework\**" />
+    <EmbeddedResource Remove="wwwroot\_framework\**" />
+    <None Remove="bin\Debug\netstandard2.1\wwwroot\_framework\**" />
+    <None Remove="wwwroot\_framework\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="compilerconfig.json" />
   </ItemGroup>
 
@@ -22,11 +33,13 @@
     <ProjectReference Include="..\GeneralUi\GeneralUi.csproj" />
     <ProjectReference Include="..\Organize.Business\Organize.Business.csproj" />
     <ProjectReference Include="..\Organize.DataAccess\Organize.DataAccess.csproj" />
+    <ProjectReference Include="..\Organize.InMemoryStorage\Organize.InMemoryStorage.csproj" />
     <ProjectReference Include="..\Organize.Shared\Organize.Shared.csproj" />
     <ProjectReference Include="..\Organize.TestFake\Organize.TestFake.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="bin\Debug\netstandard2.1\wwwroot\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 

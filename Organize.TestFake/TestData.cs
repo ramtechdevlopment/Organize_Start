@@ -1,15 +1,16 @@
-﻿using System;
+﻿using Organize.Shared.Contracts;
+using Organize.Shared.Entities;
+using Organize.Shared.Enums;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
-using Organize.Shared.Contracts;
 using Organize.Shared.Enitities;
 using Organize.Shared.Entities;
-using Organize.Shared.Enums;
 
 namespace Organize.TestFake
 {
-   public class TestData
+    public class TestData
     {
         public static User TestUser { get; private set; }
 
@@ -19,15 +20,31 @@ namespace Organize.TestFake
         {
             var user = new User();
             user.Id = 123;
-            user.UserName = "RB";
-            user.FirstName = "Raghbir";
-            user.LastName = "Badhan";
+            user.UserName = "Ben";
+            user.FirstName = "Benjamin";
+            user.LastName = "Proft";
             user.Password = "test";
             user.GenderType = GenderTypeEnum.Male;
             user.UserItems = new ObservableCollection<BaseItem>();
-            
-            var textItem = new TextItem();
-            user.UserItems.Add(textItem);
+
+            if (userManager != null)
+            {
+                userManager.InsertUserAsync(user);
+            }
+
+            TextItem textItem = null;
+            if (userItemManager != null)
+            {
+                textItem = (TextItem)userItemManager
+                    .CreateNewUserItemAndAddItToUserAsync(user, ItemTypeEnum.Text).Result;
+            }
+            else
+            {
+                textItem = new TextItem();
+                user.UserItems.Add(textItem);
+            }
+
+
             textItem.ParentId = user.Id;
             textItem.Id = 1;
             textItem.Title = "Buy Apples";
@@ -36,10 +53,17 @@ namespace Organize.TestFake
             textItem.ItemTypeEnum = ItemTypeEnum.Text;
             textItem.Position = 1;
 
+            UrlItem urlItem;
+            if (userItemManager != null)
+            {
+                urlItem = (UrlItem)userItemManager.CreateNewUserItemAndAddItToUserAsync(user, ItemTypeEnum.Url).Result;
+            }
+            else
+            {
+                urlItem = new UrlItem();
+                user.UserItems.Add(urlItem);
+            }
 
-
-            var urlItem = new UrlItem();
-            user.UserItems.Add(urlItem);
             urlItem.ParentId = user.Id;
             urlItem.Id = 2;
             urlItem.Title = "Buy Sunflowers";
@@ -47,9 +71,19 @@ namespace Organize.TestFake
             urlItem.ItemTypeEnum = ItemTypeEnum.Url;
             urlItem.Position = 2;
 
+            ParentItem parentItem;
+            if (userItemManager != null)
+            {
+                parentItem = (ParentItem)userItemManager
+                    .CreateNewUserItemAndAddItToUserAsync(user, ItemTypeEnum.ParentItem)
+                    .Result;
+            }
+            else
+            {
+                parentItem = new ParentItem();
+                user.UserItems.Add(parentItem);
+            }
 
-           var parentItem = new ParentItem();
-            user.UserItems.Add(parentItem);
             parentItem.ParentId = user.Id;
             parentItem.Id = 3;
             parentItem.Title = "Make Birthday Present";
@@ -57,9 +91,20 @@ namespace Organize.TestFake
             parentItem.Position = 3;
             parentItem.ChildItems = new ObservableCollection<ChildItem>();
 
+            ChildItem childItem;
+            if (userItemManager != null)
+            {
+                childItem = (ChildItem)userItemManager
+                    .CreateNewChildItemAndAddItToParentItemAsync(parentItem).Result;
 
-           var childItem = new ChildItem();
-            parentItem.ChildItems.Add(childItem);
+                //Clear becuase entites are stored
+                user.UserItems.Clear();
+            }
+            else
+            {
+                childItem = new ChildItem();
+                parentItem.ChildItems.Add(childItem);
+            }
             childItem.ParentId = parentItem.Id;
             childItem.Id = 4;
             childItem.ItemTypeEnum = ItemTypeEnum.Child;
@@ -69,7 +114,4 @@ namespace Organize.TestFake
             TestUser = user;
         }
     }
-
-
 }
-
