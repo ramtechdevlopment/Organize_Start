@@ -90,5 +90,53 @@ namespace Organize.Business
 
             return item;
         }
+
+        public async Task UpdateAsync<T>(T item) where T : BaseItem
+        {
+            switch (item)
+            {
+                case TextItem textItem:
+                    await _itemDataAccess.UpdateItemAsync(textItem);
+                    break;
+                case UrlItem urlItem:
+                    await _itemDataAccess.UpdateItemAsync(urlItem);
+                    break;
+                case ParentItem parentItem:
+                    await _itemDataAccess.UpdateItemAsync(parentItem);
+                    break;
+                case ChildItem childItem:
+                    await _itemDataAccess.UpdateItemAsync(childItem);
+                    break;
+            }
+
+        }
+
+        public async Task DeleteAllDoneAsync(User user)
+        {
+            var doneItems = user.UserItems.Where(i => i.IsDone).ToList();
+            Console.WriteLine(doneItems.Count);
+
+            var doneParentItem = doneItems.OfType<ParentItem>().ToList();
+            var allChildItems = doneParentItem.SelectMany(i => i.ChildItems).ToList();
+
+            await _itemDataAccess.DeleteItemsAsync(allChildItems);
+            await _itemDataAccess.DeleteItemsAsync(doneParentItem);
+            await _itemDataAccess.DeleteItemsAsync(doneItems.OfType<TextItem>());
+            await _itemDataAccess.DeleteItemsAsync(doneItems.OfType<UrlItem>());
+
+            foreach (var doneItem in doneItems)
+            {
+                user.UserItems.Remove(doneItem);
+            }
+
+            var sortedByPosition = user.UserItems.OrderBy(i => i.Position);
+            var position = 1;
+            foreach (var item in sortedByPosition)
+            {
+                item.Position = position;
+                position++;
+                await UpdateAsync(item);
+            }
+        }
     }
 }

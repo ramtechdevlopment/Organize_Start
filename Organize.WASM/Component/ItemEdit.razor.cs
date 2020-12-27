@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Organize.Business;
@@ -24,22 +27,44 @@ namespace Organize.WASM.Component
         [Inject]
         private ICurrentUserService CurrentUserService { get; set; }
 
+        [Inject]
+        private IUserItemManager UserItemManager { get; set; }
+
         private BaseItem Item { get; set; }=new BaseItem();
 
         private int TotalNumber { get; set; }
 
+        private System.Timers.Timer _debounceTimer { get; set; }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
-           // ItemEditService.EditItemChanged += HandleEditItemChanged; 
+            _debounceTimer = new System.Timers.Timer();
+            _debounceTimer.Interval = 500;
+            _debounceTimer.AutoReset = false;
+            _debounceTimer.Elapsed += HandleDebounceTimerElapsed;
+
+
+            // ItemEditService.EditItemChanged += HandleEditItemChanged; 
             //if 1st item does not work
             //Item = ItemEditService;
             SetDataFromUri();
         }
 
+        private void HandleDebounceTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            Console.WriteLine("timer elaspsed");
+            UserItemManager.UpdateAsync(Item);
+        }
+
         private void SetDataFromUri()
         {
 
+            if (Item != null)
+            {
+
+                Item.PropertyChanged -= HandleItemPropertyChanged;
+            }
 
             var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
 
@@ -61,10 +86,22 @@ namespace Organize.WASM.Component
                 else
                 {
                     Item = userItem;
+                    Item.PropertyChanged += HandleItemPropertyChanged;
                     NavigationManager.LocationChanged += HandleLocationChanged;
                  StateHasChanged();
                 }
             }
+        }
+
+        private async void HandleItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_debounceTimer != null)
+            {
+                _debounceTimer.Stop();
+                _debounceTimer.Start();
+            } 
+            // we using the debouncer method to avoid too many calls to DB etc for update method
+            // await UserItemManager.UpdateAsync(Item);
         }
 
         private void HandleLocationChanged(object sender, LocationChangedEventArgs e)
@@ -72,15 +109,24 @@ namespace Organize.WASM.Component
           SetDataFromUri();
         }
 
-        private void HandleEditItemChanged(object sender, ItemEditEventArgs e)
-        {
-            Item = e.Item;
-            StateHasChanged();
-        }
+        //if we going to use service approach *************** OPTION *************************
+        //private void HandleEditItemChanged(object sender, ItemEditEventArgs e)
+        //{
+        //    if (Item != null)
+        //    {
+        //        Item.PropertyChanged -= HandleItemPropertyChanged;
+        //    }
+        //    Item = e.Item;
+        //    Item.PropertyChanged += HandleItemPropertyChanged;
+        //    StateHasChanged();
+           
+        //}
 
         public void Dispose()
         {
+            _debounceTimer.Dispose();
             NavigationManager.LocationChanged -= HandleLocationChanged;
+            Item.PropertyChanged -= HandleItemPropertyChanged;
         }
     }
 }

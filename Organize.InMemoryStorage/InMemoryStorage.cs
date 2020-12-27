@@ -50,6 +50,8 @@ namespace Organize.InMemoryStorage
 
         public Task UpdateAsync<T>(T entity) where T : BaseEntity
         {
+            Console.WriteLine("Update : " + entity.Id );
+            Console.WriteLine(JsonSerializer.Serialize(entity));
             return Task.FromResult(true);
         }
 

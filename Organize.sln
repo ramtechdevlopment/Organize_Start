@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneralUi", "GeneralUi\Gene
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Organize.TestFake", "Organize.TestFake\Organize.TestFake.csproj", "{0C1035DB-F787-41C5-9A8B-A124325183F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Organize.InMemoryStorage", "Organize.InMemoryStorage\Organize.InMemoryStorage.csproj", "{1701AF00-8FFF-47C2-9DB2-09CBD72137A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Organize.InMemoryStorage", "Organize.InMemoryStorage\Organize.InMemoryStorage.csproj", "{1701AF00-8FFF-47C2-9DB2-09CBD72137A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Organize.IndexedDB", "Organize.IndexedDB\Organize.IndexedDB.csproj", "{84B49926-5C07-46C6-A8F5-D9CFDA9AF6BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{1701AF00-8FFF-47C2-9DB2-09CBD72137A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1701AF00-8FFF-47C2-9DB2-09CBD72137A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1701AF00-8FFF-47C2-9DB2-09CBD72137A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84B49926-5C07-46C6-A8F5-D9CFDA9AF6BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84B49926-5C07-46C6-A8F5-D9CFDA9AF6BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84B49926-5C07-46C6-A8F5-D9CFDA9AF6BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84B49926-5C07-46C6-A8F5-D9CFDA9AF6BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
