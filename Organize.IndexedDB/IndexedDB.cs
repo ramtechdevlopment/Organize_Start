@@ -14,11 +14,13 @@ namespace Organize.IndexedDB
     public class IndexedDB : IPersistanceService
     {
         private IJSRuntime _jsRuntime;
+        private JsonSerializerSettings _settings;
 
         public IndexedDB(IJSRuntime jsRuntime)
         {
             _jsRuntime = jsRuntime;
-
+            _settings = new  JsonSerializerSettings();
+            _settings.ContractResolver = new SimplePropertyContractResolver();
         }
 
         public async Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T, bool>> whereExpression) where T : BaseEntity
@@ -40,7 +42,7 @@ namespace Organize.IndexedDB
 
         private string SerializeAndRemoveArraysAndNavigationProperties<T>(T entity)
         {
-            var stringWithoutNavigationProperties = JsonConvert.SerializeObject(entity);
+            var stringWithoutNavigationProperties = JsonConvert.SerializeObject(entity,_settings);
             return stringWithoutNavigationProperties;
         }
 

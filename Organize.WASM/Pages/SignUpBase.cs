@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Organize.Shared.Contracts;
 
 namespace Organize.WASM.Pages
 {
@@ -22,7 +23,8 @@ namespace Organize.WASM.Pages
 
         protected DropdownItem<GenderTypeEnum>SelectedGenderTypeDropDownItem { get; set; }
 
-       
+       [Inject]
+       private IUserManager UserManager { get; set; }
 
         protected override void OnInitialized()
         {
@@ -50,9 +52,9 @@ namespace Organize.WASM.Pages
             GenderTypeDropDownItems.Add(neutral);
 
             SelectedGenderTypeDropDownItem = female;
-
-            // TryGetUserNameFromUri();
-            User.UserName = Username;
+            
+            TryGetUserNameFromUri();
+          //  User.UserName = Username;
         }
 
         private void TryGetUserNameFromUri()
@@ -65,9 +67,9 @@ namespace Organize.WASM.Pages
             }
         }
 
-        protected void OnValidSubmit()
+        protected async void OnValidSubmit()
         {
-            //to do...
+            await UserManager.InsertUserAsync(User);
             NavigationManager.NavigateTo("signin");
         }
 
